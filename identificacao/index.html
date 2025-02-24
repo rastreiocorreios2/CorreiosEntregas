@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Checkout Pix</title>
+    <script src="https://cdn.jsdelivr.net/npm/qrcode/build/qrcode.min.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            text-align: center;
+            padding: 20px;
+        }
+        .container {
+            background-color: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            width: 400px;
+            margin: auto;
+        }
+        h1 {
+            color: #333;
+        }
+        .value {
+            font-size: 24px;
+            margin: 20px 0;
+            color: #4CAF50;
+        }
+        .pix-info {
+            margin-top: 20px;
+            color: #333;
+            font-size: 18px;
+        }
+        .qr-container {
+            margin-top: 20px;
+        }
+        .pix-key {
+            background-color: #f1f1f1;
+            padding: 10px;
+            border-radius: 5px;
+            font-family: monospace;
+            margin: 10px 0;
+            word-wrap: break-word;
+        }
+        .copy-btn {
+            margin-top: 10px;
+            padding: 10px 20px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .copy-btn:hover {
+            background-color: #45a049;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Pagamento via Pix</h1>
+        <p class="value">R$ 100,00</p>
+
+        <div class="pix-info">
+            <p>Chave Pix:</p>
+            <div class="pix-key" id="pix-key">
+                chave@dominio.com
+            </div>
+            <button class="copy-btn" onclick="copyPixKey()">Copiar chave Pix</button>
+        </div>
+
+        <div class="qr-container">
+            <p>Ou escaneie o QR Code abaixo para pagar:</p>
+            <div id="qrcode"></div>
+        </div>
+    </div>
+
+    <script>
+        // Função para copiar a chave Pix
+        function copyPixKey() {
+            const pixKey = document.getElementById('pix-key').innerText;
+            navigator.clipboard.writeText(pixKey).then(function() {
+                alert('Chave Pix copiada com sucesso!');
+            }, function() {
+                alert('Falha ao copiar a chave Pix.');
+            });
+        }
+
+        // Gerando o QR Code
+        const pixData = {
+            "v": "2", // versão do Pix
+            "d": {
+                "recebedor": {
+                    "chave": "chave@dominio.com", // Chave Pix (pode ser e-mail, CPF, CNPJ)
+                    "nome": "Loja Exemplo"
+                },
+                "valor": 100.00 // Valor do pagamento
+            }
+        };
+
+        // Convertendo dados do Pix em uma string
+        const pixString = JSON.stringify(pixData);
+
+        // Gerando o QR Code com a string Pix
+        QRCode.toCanvas(document.getElementById('qrcode'), pixString, function(error) {
+            if (error) console.error(error);
+        });
+    </script>
+</body>
+</html>
